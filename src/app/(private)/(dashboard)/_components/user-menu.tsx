@@ -10,23 +10,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/hooks/use-auth';
-import axios from 'axios';
-import { LogOutIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { useSignOut } from '@/hooks/use-sign-out';
+import { Loader2Icon, LogOutIcon } from 'lucide-react';
 
 export function UserMenu() {
-  const router = useRouter();
   const { user } = useAuth();
-
-  async function handleLogout() {
-    try {
-      router.push('/sign-in');
-      await axios.post('/api/auth/sign-out');
-    } catch {
-      toast.error('Failed to logout');
-    }
-  }
+  const { isLoading, handleSignOut } = useSignOut();
 
   return (
     <DropdownMenu>
@@ -51,10 +40,15 @@ export function UserMenu() {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem
-          onSelect={handleLogout}
+          onSelect={handleSignOut}
           className="cursor-pointer flex justify-between"
         >
-          Logout <LogOutIcon />
+          {isLoading && <Loader2Icon className="animate-spin w-4 h-4" />}
+          {!isLoading && (
+            <>
+              Logout <LogOutIcon />
+            </>
+          )}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

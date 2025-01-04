@@ -1,22 +1,23 @@
 'use client';
 
-import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import { useSignOut } from '@/hooks/use-sign-out';
+import { Loader2Icon } from 'lucide-react';
 import { useEffect } from 'react';
 
 export function SignOut() {
-  const router = useRouter();
+  const { isLoading, handleSignOut } = useSignOut();
 
   useEffect(() => {
-    async function handleSignout() {
-      try {
-        router.push('/sign-in');
-        await axios.post('/api/auth/sign-out');
-      } catch {}
-    }
+    handleSignOut();
+  }, [handleSignOut]);
 
-    handleSignout();
-  }, []);
+  if (isLoading) {
+    return (
+      <div className="min-h-screen grid place-items-center p-4 gap-4">
+        <Loader2Icon className="animate-spin w-8 h-8 text-primary" />
+      </div>
+    );
+  }
 
   return null;
 }
