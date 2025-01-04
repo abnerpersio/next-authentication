@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,6 +6,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { UserMenu } from './user-menu';
 
 export function AppBar() {
   return (
@@ -25,16 +25,7 @@ export function AppBar() {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div>
-        <Avatar>
-          <AvatarImage
-            src="https://github.com/abnerpersio.png"
-            alt="@abnerpersio"
-          />
-
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
-      </div>
+      <UserMenu />
     </header>
   );
 }
