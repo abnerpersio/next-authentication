@@ -18,8 +18,11 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios, { AxiosError } from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 const schema = z.object({
@@ -36,6 +39,8 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 export default function SignIn() {
+  const router = useRouter();
+
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -44,8 +49,15 @@ export default function SignIn() {
     },
   });
 
-  const handleSubmit = form.handleSubmit((formValues) => {
-    console.log('formValues', formValues);
+  const handleSubmit = form.handleSubmit(async (formValues) => {
+    try {
+      await axios.post('/api/auth/sign-in', formValues);
+      router.push('/');
+    } catch (error: unknown) {
+      const message = (error as AxiosError<{ message?: string }>).response?.data
+        ?.message;
+      toast.error(message ?? 'Invalid credentials');
+    }
   });
 
   return (
@@ -113,7 +125,11 @@ export default function SignIn() {
                 )}
               />
 
-              <Button type="submit" className="w-full">
+              <Button
+                isLoading={form.formState.isSubmitting}
+                type="submit"
+                className="w-full"
+              >
                 Login
               </Button>
             </div>

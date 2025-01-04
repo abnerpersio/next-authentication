@@ -1,3 +1,4 @@
+import { Toaster } from '@/components/ui/sonner';
 import type { Metadata } from 'next';
 import './globals.css';
 
@@ -13,7 +14,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br" className="w-full h-full">
-      <body className="antialiased w-full h-full">{children}</body>
+      <body className="antialiased w-full h-full">
+        {children}
+
+        <Toaster />
+      </body>
     </html>
   );
 }
