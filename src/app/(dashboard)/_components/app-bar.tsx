@@ -6,6 +6,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { ThemeSwitcher } from './theme-switcher';
 import { UserMenu } from './user-menu';
 
 export function AppBar() {
@@ -25,7 +26,11 @@ export function AppBar() {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <UserMenu />
+      <div className="flex items-center justify-end gap-6">
+        <ThemeSwitcher />
+
+        <UserMenu />
+      </div>
     </header>
   );
 }

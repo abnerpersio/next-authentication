@@ -1,4 +1,5 @@
 import { Toaster } from '@/components/ui/sonner';
+import { ThemeProvider } from '@/contexts/theme';
 import type { Metadata } from 'next';
 import './globals.css';
 
@@ -15,9 +16,16 @@ export default function RootLayout({
   return (
     <html lang="pt-br" className="w-full h-full">
       <body className="antialiased w-full h-full">
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
 
-        <Toaster />
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
