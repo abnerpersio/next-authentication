@@ -47,6 +47,7 @@ export async function auth(): Promise<null | LoggedUser> {
   return {
     id: user.id,
     email: user.email,
+    username: user.username,
     name: user.name,
   };
 }

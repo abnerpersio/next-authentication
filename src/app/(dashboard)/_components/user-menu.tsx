@@ -5,8 +5,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useAuth } from '@/hooks/use-auth';
 import axios from 'axios';
 import { LogOutIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -14,6 +17,7 @@ import { toast } from 'sonner';
 
 export function UserMenu() {
   const router = useRouter();
+  const { user } = useAuth();
 
   async function handleLogout() {
     try {
@@ -29,15 +33,23 @@ export function UserMenu() {
       <DropdownMenuTrigger asChild>
         <Avatar>
           <AvatarImage
-            src="https://github.com/abnerpersio.png"
-            alt="@abnerpersio"
+            src={`https://github.com/${user.username}.png`}
+            alt={`@${user.username}`}
           />
 
-          <AvatarFallback>AP</AvatarFallback>
+          <AvatarFallback>{user.name.slice(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="w-44">
+        <DropdownMenuLabel>
+          <strong>{user.name}</strong>
+
+          <small className="text-muted-foreground block">{user.email}</small>
+        </DropdownMenuLabel>
+
+        <DropdownMenuSeparator />
+
         <DropdownMenuItem
           onSelect={handleLogout}
           className="cursor-pointer flex justify-between"

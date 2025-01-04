@@ -1,5 +1,8 @@
+import { cookieKeys } from '@/config/cookies';
+import { env } from '@/config/env';
 import { prismaClient } from '@/lib/database/prisma';
 import { hash } from 'bcryptjs';
+import { sign } from 'jsonwebtoken';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -12,6 +15,7 @@ const schema = z.object({
     .string({ required_error: 'Required field' })
     .trim()
     .email('Invalid email address'),
+  username: z.string().trim().optional().nullable(),
   password: z
     .string({ required_error: 'Required field' })
     .trim()
@@ -30,7 +34,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { email, name, password } = data;
+  const { email, name, username, password } = data;
 
   const emailAlreadyExists = await prismaClient.user.findUnique({
     where: { email },
@@ -46,9 +50,22 @@ export async function POST(request: NextRequest) {
 
   const hashedPassword = await hash(password, 12);
 
-  await prismaClient.user.create({
-    data: { email, name, password: hashedPassword },
+  const user = await prismaClient.user.create({
+    data: { email, name, username, password: hashedPassword },
   });
 
-  return new NextResponse(null, { status: 204 });
+  const accessToken = sign({ sub: user.id }, env.jwtSecret, {
+    expiresIn: '7d',
+  });
+
+  const response = new NextResponse(null, { status: 204 });
+  response.cookies.set(cookieKeys.token, accessToken, {
+    httpOnly: true,
+    maxAge: env.cookieExpInSeconds,
+    path: '/',
+    sameSite: 'strict',
+    secure: true,
+  });
+
+  return response;
 }

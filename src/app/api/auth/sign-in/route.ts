@@ -17,8 +17,6 @@ const schema = z.object({
     .min(6, 'Password must have at least 6 characters'),
 });
 
-const COOKIE_EXPIRATION_IN_SECONDS = 60 * 60 * 24 * 7;
-
 export async function POST(request: NextRequest) {
   const body = await request.json();
 
@@ -61,7 +59,7 @@ export async function POST(request: NextRequest) {
   const response = new NextResponse(null, { status: 204 });
   response.cookies.set(cookieKeys.token, accessToken, {
     httpOnly: true,
-    maxAge: COOKIE_EXPIRATION_IN_SECONDS,
+    maxAge: env.cookieExpInSeconds,
     path: '/',
     sameSite: 'strict',
     secure: true,

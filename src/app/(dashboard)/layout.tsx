@@ -1,4 +1,5 @@
 import { SignOut } from '@/components/sign-out';
+import { AuthProvider } from '@/contexts/auth';
 import { auth } from '@/lib/auth';
 import { AppBar } from './_components/app-bar';
 
@@ -14,10 +15,12 @@ export default async function DashboardLayout({ children }: Props) {
   }
 
   return (
-    <div className="w-full">
-      <AppBar />
+    <AuthProvider user={user}>
+      <div className="w-full">
+        <AppBar />
 
-      <div className="flex flex-1 w-full">{children}</div>
-    </div>
+        <div className="flex flex-1 w-full">{children}</div>
+      </div>
+    </AuthProvider>
   );
 }

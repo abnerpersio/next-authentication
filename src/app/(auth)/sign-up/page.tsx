@@ -34,6 +34,7 @@ const schema = z.object({
     .string({ required_error: 'Required field' })
     .trim()
     .email('Invalid email address'),
+  username: z.string().trim().optional(),
   password: z
     .string({ required_error: 'Required field' })
     .trim()
@@ -50,6 +51,7 @@ export default function SignUp() {
     defaultValues: {
       email: '',
       name: '',
+      username: '',
       password: '',
     },
   });
@@ -58,11 +60,8 @@ export default function SignUp() {
     try {
       await axios.post('/api/auth/sign-up', formValues);
 
-      toast.success('Account created successfully', {
-        description: 'Faça login',
-      });
-
-      router.push('/sign-in');
+      toast.success('Account created successfully');
+      router.push('/');
     } catch (error: unknown) {
       const message = (error as AxiosError<{ message?: string }>).response?.data
         ?.message;
@@ -84,26 +83,48 @@ export default function SignUp() {
         <Form {...form}>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
+              <div className="grid md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
 
-                    <FormControl>
-                      <Input
-                        type="text"
-                        autoComplete="name"
-                        placeholder="Max"
-                        {...field}
-                      />
-                    </FormControl>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          autoComplete="name"
+                          placeholder="Max"
+                          {...field}
+                        />
+                      </FormControl>
 
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Github username (optional)</FormLabel>
+
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="abnerpersio"
+                          {...field}
+                        />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <FormField
                 control={form.control}
