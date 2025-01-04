@@ -1,5 +1,5 @@
-import { getAccessToken } from '@/lib/auth';
-import { redirect, RedirectType } from 'next/navigation';
+import { SignOut } from '@/components/sign-out';
+import { auth } from '@/lib/auth';
 import { AppBar } from './_components/app-bar';
 
 type Props = {
@@ -7,10 +7,10 @@ type Props = {
 };
 
 export default async function DashboardLayout({ children }: Props) {
-  const accessToken = await getAccessToken();
+  const user = await auth();
 
-  if (!accessToken) {
-    return redirect('/sign-in', RedirectType.replace);
+  if (!user) {
+    return <SignOut />;
   }
 
   return (

@@ -1,4 +1,4 @@
-import { getAccessToken } from '@/lib/auth';
+import { isAuthenticated } from '@/lib/auth';
 import { redirect, RedirectType } from 'next/navigation';
 
 type Props = {
@@ -6,9 +6,7 @@ type Props = {
 };
 
 export default async function AuthLayout({ children }: Props) {
-  const accessToken = await getAccessToken();
-
-  if (!!accessToken) {
+  if (await isAuthenticated()) {
     return redirect('/', RedirectType.replace);
   }
 
