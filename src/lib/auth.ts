@@ -5,7 +5,7 @@ import { JwtPayload, verify } from 'jsonwebtoken';
 import { cookies } from 'next/headers';
 import { prismaClient } from './database/prisma';
 
-async function verifyAccessToken() {
+export async function verifyAccessToken() {
   const accessToken = (await cookies()).get(cookieKeys.token)?.value;
 
   if (!accessToken) {
